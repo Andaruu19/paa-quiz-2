@@ -1,0 +1,167 @@
+/* ... (CSS body, header, main, canvas-container, #starCanvas, .controls, button tetap sama) ... */
+body {
+    background-color: #121222;
+    color: #e0e0ff;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: #82aaff;
+    font-size: 2.5em;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px #82aaff;
+}
+
+.subtitle {
+    font-size: 1.1em;
+    color: #aabbff;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 850px;
+}
+
+.canvas-container {
+    border: 2px solid #404068;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(64, 64, 104, 0.7);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+#starCanvas {
+    display: block;
+    background-color: #1a1a30;
+    cursor: crosshair;
+}
+
+.controls {
+    margin-bottom: 15px; /* Kurangi sedikit margin bawah */
+    display: flex;
+    gap: 10px;
+}
+
+button { /* Style tombol tetap sama */
+    background-color: #4a4af0;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+button:hover {
+    background-color: #6a6aff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+button:active {
+    background-color: #3a3ad0;
+    transform: scale(0.98);
+}
+button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+/* BAGIAN BARU UNTUK ALGORITMA */
+.algorithm-section {
+    display: flex; /* Sejajarkan pemilih dan instruksi */
+    align-items: flex-start; /* Atau center jika preferensi */
+    gap: 20px; /* Jarak antara pemilih dan teks instruksi */
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 600px; /* Sesuaikan lebar jika perlu */
+    padding: 10px;
+    background-color: #1c1c30; /* Warna sedikit beda dari panel info */
+    border-radius: 6px;
+    /* border: 1px solid #303050; */ /* Opsional border */
+}
+
+.algorithm-selector {
+    /* text-align: left; */ /* Tidak perlu jika flex parent sudah align-items: flex-start */
+    flex-basis: 220px; /* Beri basis lebar agar tidak terlalu sempit */
+    flex-shrink: 0; /* Jangan biarkan menyusut */
+}
+
+.algorithm-selector h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #aabbff;
+    font-size: 1.0em; /* Sedikit lebih kecil */
+}
+
+.algorithm-selector label {
+    display: block;
+    margin-bottom: 5px;
+    color: #c0c0ff;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+.algorithm-selector input[type="radio"] {
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.instruction-text {
+    flex-grow: 1; /* Biarkan teks instruksi mengambil sisa ruang */
+    margin-top: 5px; /* Sesuaikan dengan alignment h3 */
+    min-height: 1.2em;
+    font-style: italic;
+    color: #9090b0;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+/* AKHIR BAGIAN BARU */
+
+
+.info-panel {
+    background-color: #202038;
+    padding: 15px 25px;
+    border-radius: 8px;
+    border: 1px solid #303050;
+    min-width: 280px;
+    text-align: left;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    font-size: 0.95em;
+    margin-bottom: 20px; /* Beri jarak ke footer */
+}
+
+.info-panel p {
+    margin: 8px 0;
+    color: #c0c0ff;
+}
+
+.info-panel span {
+    font-weight: bold;
+    color: #e0e0ff;
+}
+
+footer {
+    margin-top: auto; /* Dorong footer ke bawah jika konten tidak penuh */
+    padding-top: 10px; /* Sedikit padding atas */
+    font-size: 0.9em;
+    color: #707090;
+    text-align: center;
+}

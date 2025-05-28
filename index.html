@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect the Stars - Visualizer</title> <!-- Judul diperbarui -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Connect the Stars</h1>
+        <p class="subtitle" id="subtitleText">Minimum Spanning Tree Visualizer</p> <!-- ID untuk update subtitle -->
+    </header>
+
+    <main>
+        <div class="canvas-container">
+            <canvas id="starCanvas" width="800" height="500"></canvas>
+        </div>
+
+        <div class="controls">
+            <button id="toggleAddEdgeModeButton" title="Masuk/Keluar mode menambah edge">Tambah Edge</button> <!-- TOMBOL BARU -->
+            <button id="runAlgorithmButton" title="Jalankan algoritma yang dipilih">Jalankan Algoritma</button>
+            <button id="resetButton" title="Hapus semua bintang dan koneksi">Reset</button>
+            <button id="undoButton" title="Hapus bintang terakhir yang ditambahkan">Urungkan Bintang</button>
+            <button id="undoButton" title="Hapus bintang terakhir yang ditambahkan/dibuat">Urungkan</button> <!-- Undo sekarang bisa undo edge juga -->
+        </div>
+
+        <!-- BAGIAN BARU UNTUK PEMILIHAN ALGORITMA DAN INSTRUKSI -->
+        <div class="algorithm-section">
+            <div class="algorithm-selector">
+                <h3>Pilih Mode:</h3>
+                <label><input type="radio" name="algorithm" value="MST" checked> MST</label>
+                <label><input type="radio" name="algorithm" value="SP"> Shortest Path</label>
+                <label><input type="radio" name="algorithm" value="TSP"> TSP</label>
+            </div>
+            <p id="instructionText" class="instruction-text"></p>
+        </div>
+        <!-- AKHIR BAGIAN BARU -->
+
+        <div class="info-panel" id="infoPanel">
+            <p>Jumlah Bintang: <span id="starCount">0</span></p>
+            <p id="costLabelParagraph">Total Biaya/Jarak: <span id="algorithmCost">0.00</span></p>
+        </div>
+    </main>
+
+    <footer>
+        <p id="footerAlgorithmText">Gunakan algoritma Kruskal untuk MST.</p> <!-- ID untuk update footer -->
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
