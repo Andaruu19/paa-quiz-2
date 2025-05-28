@@ -1027,56 +1027,110 @@ document.addEventListener("DOMContentLoaded", () => {
       : [];
   }
   function calculateNearestNeighborTSP(allNodes, currentEdges, startNodeId) {
-    if (allNodes.length < 1) return [];
-    if (
-      (!startNodeId || !allNodes.find((n) => n.id === startNodeId)) &&
-      allNodes.length > 0
-    ) {
-      startNodeId = allNodes[0].id;
+    // 1. Tangani kasus dasar: tidak ada node
+    if (allNodes.length < 1) {
+      return [];
     }
-    if (!allNodes.find((n) => n.id === startNodeId)) return [];
-    if (allNodes.length === 1) return [startNodeId];
+
+    // 2. Tentukan startNodeId yang valid
+    // Jika startNodeId tidak diberikan atau tidak ditemukan di allNodes,
+    // gunakan ID dari node pertama yang ada di allNodes sebagai default.
+    let effectiveStartNodeId = startNodeId;
+    if (
+      !effectiveStartNodeId ||
+      !allNodes.find((n) => n.id === effectiveStartNodeId)
+    ) {
+      if (allNodes.length > 0) {
+        effectiveStartNodeId = allNodes[0].id;
+      } else {
+        // Ini seharusnya tidak tercapai karena sudah ditangani allNodes.length < 1
+        return [];
+      }
+    }
+
+    // Pastikan startNodeId yang efektif benar-benar ada di allNodes
+    if (!allNodes.find((n) => n.id === effectiveStartNodeId)) {
+      console.warn("TSP: Effective start node ID not found among all nodes.");
+      return [];
+    }
+
+    // 3. Tangani kasus khusus: hanya satu node
+    if (allNodes.length === 1) {
+      return [effectiveStartNodeId];
+    }
+
+    // Inisialisasi set node yang belum dikunjungi dan tur
     let unvisited = new Set(allNodes.map((n) => n.id));
     let tour = [];
-    let currId = startNodeId;
+    let currId = effectiveStartNodeId;
+
     tour.push(currId);
     unvisited.delete(currId);
+
+    // Iterasi untuk membangun tur Nearest Neighbor
     while (unvisited.size > 0) {
-      let nnId = null;
-      let minD = Infinity;
+      let nearestNeighborId = null;
+      let minDistance = Infinity;
+
+      // Cari tetangga terdekat dari currId di antara node yang belum dikunjungi
       unvisited.forEach((nId) => {
-        const e = currentEdges.find(
-          (x) =>
-            (x.node1Id === currId && x.node2Id === nId) ||
-            (x.node1Id === nId && x.node2Id === currId)
+        const edge = currentEdges.find(
+          (e) =>
+            (e.node1Id === currId && e.node2Id === nId) ||
+            (e.node1Id === nId && e.node2Id === currId)
         );
-        if (e && e.weight < minD) {
-          minD = e.weight;
-          nnId = nId;
+
+        if (edge && edge.weight < minDistance) {
+          minDistance = edge.weight;
+          nearestNeighborId = nId;
         }
       });
-      if (nnId) {
-        currId = nnId;
+
+      // Jika tidak ada tetangga yang dapat dijangkau dari currId,
+      // berarti graf terputus atau tidak ada edge yang tersisa untuk unvisited nodes.
+      if (nearestNeighborId) {
+        currId = nearestNeighborId;
         tour.push(currId);
         unvisited.delete(currId);
-      } else break;
+      } else {
+        // Jika tidak ada tetangga terdekat yang ditemukan, berarti ada node yang tidak terhubung.
+        // Tur tidak dapat diselesaikan sebagai siklus penuh.
+        console.warn(
+          "TSP: Cannot visit all nodes (disconnected graph or no path). Remaining unvisited:",
+          unvisited.size
+        );
+        break; // Keluar dari loop karena tidak bisa melanjutkan tur
+      }
     }
-    if (
-      tour.length > 1 &&
-      unvisited.size === 0 &&
-      tour[tour.length - 1] !== startNodeId
-    ) {
-      const lastId = tour[tour.length - 1];
-      const e2s = currentEdges.find(
-        (e) =>
-          (e.node1Id === lastId && e.node2Id === startNodeId) ||
-          (e.node1Id === startNodeId && e.node2Id === lastId)
-      );
-      if (e2s) tour.push(startNodeId);
-      else console.warn("TSP: No direct edge to return to start.");
+
+    // 4. Periksa apakah tur dapat kembali ke node awal untuk membentuk siklus penuh
+    // Ini hanya relevan jika semua node telah dikunjungi.
+    if (unvisited.size === 0 && tour.length > 1) {
+      // Pastikan semua node dikunjungi dan ada lebih dari 1 node
+      const lastNodeInTourId = tour[tour.length - 1];
+      // Jika node terakhir bukan node awal, coba tambahkan edge penutup
+      if (lastNodeInTourId !== effectiveStartNodeId) {
+        const closingEdge = currentEdges.find(
+          (e) =>
+            (e.node1Id === lastNodeInTourId &&
+              e.node2Id === effectiveStartNodeId) ||
+            (e.node1Id === effectiveStartNodeId &&
+              e.node2Id === lastNodeInTourId)
+        );
+        if (closingEdge) {
+          tour.push(effectiveStartNodeId); // Tambahkan node awal lagi untuk menutup siklus
+        } else {
+          console.warn(
+            "TSP: All nodes visited, but no direct edge to return to start node to complete the cycle."
+          );
+          // Tur tetap dikembalikan, tetapi tanpa penutup siklus.
+        }
+      }
     } else if (unvisited.size > 0) {
-      console.warn("TSP: Not all nodes visited.");
+      // Ini sudah ditangani di dalam loop, tetapi untuk kejelasan, bisa diulang di sini.
+      console.warn("TSP: Not all nodes were visited (disconnected graph).");
     }
+
     return tour;
   }
   class PriorityQueue {
